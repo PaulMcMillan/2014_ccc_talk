@@ -57,7 +57,7 @@ class Connection(object):
         header += self.checksum(header)
         body = (
             '\x81'  # our source address
-            + chr(self.seq_num << 2)  # source lun right most 2 bits are 0
+            + chr((self.seq_num % 64) << 2)  # source lun right most 2 bits are 0
             + chr(command)
             + data
             )
