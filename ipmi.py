@@ -5,11 +5,9 @@ import os
 from collections import namedtuple
 
 
-
 COMMANDS = namedtuple(
     'Commands',
-    ['get_session_challenge,activate_session,close_session'])(0x39, 0x3a, 0x3c)
-
+    'get_session_challenge,activate_session,close_session')(0x39, 0x3a, 0x3c)
 
 
 class Connection(object):
