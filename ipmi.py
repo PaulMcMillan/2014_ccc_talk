@@ -89,20 +89,21 @@ class Connection(object):
 
 
     def activate_session(self, username, password,
-                         session_id, auth_code,
+                         session_id, challenge,
                          max_priv_level=0x04):
         data = (
             '\x04'  # straight password authentication
             + chr(max_priv_level)
-            + auth_code
+            + challenge
             + os.urandom(4)
         )
         packet = self.make_ipmi_msg(
             self.seq_num, COMMANDS.activate_session, data)
+        password = struct.pack('16s', password)
         packet = self.wrap_headers(packet,
                                    auth_type='\x04',  # password auth
                                    session_id=session_id,
-                                   auth_code=auth_code)
+                                   auth_code=password)
         return self.send(packet)
 
 
