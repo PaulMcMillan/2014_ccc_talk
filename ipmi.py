@@ -110,5 +110,5 @@ c = Connection('192.168.253.200', 623)
 print c.get_session_challenge('admin')
 res =  c.get_challenge_response()
 print res
-print len(res['session_id'])
-print len(res['challenge_string'])
+print c.activate_session('admin', 'admin',
+                         res['session_id'], res['auth_code'])
