@@ -77,8 +77,15 @@ class Connection(object):
         return self.send(packet)
 
     def get_challenge_response(self):
-        data = self.sock.recv(2048)
-        return data
+        # yes, I know there could be all kinds of crap here. But there isn't.
+        data = self.sock.recv(1024)
+        response = data[-22:-1] # grab just the returned data from response
+        res = {
+            'completion_code': response[0],
+            'session_id': response[1:5],
+            'challenge_string': response[5:20],
+            }
+
 
     def activate_session(self, username, password,
                          session_id, auth_code,
@@ -100,4 +107,7 @@ class Connection(object):
 
 c = Connection('192.168.253.200', 623)
 print c.get_session_challenge('admin')
-print repr(c.get_challenge_response())
+res =  c.get_challenge_response()
+print res
+print len(res['session_id'])
+print len(res['challenge_string'])
