@@ -83,7 +83,7 @@ class Connection(object):
         res = {
             'completion_code': response[0],
             'session_id': response[1:5],
-            'challenge_string': response[5:20],
+            'challenge_string': response[5:21],
             }
         return res
 
