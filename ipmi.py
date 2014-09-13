@@ -85,6 +85,7 @@ class Connection(object):
             'session_id': response[1:5],
             'challenge_string': response[5:20],
             }
+        return res
 
 
     def activate_session(self, username, password,
