@@ -8,7 +8,7 @@ from collections import namedtuple
 
 COMMANDS = namedtuple(
     'Commands',
-    ['get_session_challenge', 'activate_session'])(0x39, 0x3a)
+    ['get_session_challenge,activate_session,close_session'])(0x39, 0x3a, 0x3c)
 
 
 
@@ -106,6 +106,18 @@ class Connection(object):
                                    auth_code=password)
         return self.send(packet)
 
+    def close_session(self, session_id, password):
+        data = session_id
+
+        packet = self.make_ipmi_msg(
+            self.seq_num, COMMANDS.close_session, data)
+        password = struct.pack('16s', password)
+        packet = self.wrap_headers(packet,
+                                   auth_type='\x04',
+                                   session_id=session_id,
+                                   auth_code=password)
+        return self.send(packet)
+
 
 c = Connection('192.168.253.200', 623)
 print c.get_session_challenge('admin')
@@ -113,3 +125,4 @@ res =  c.get_challenge_response()
 print res
 print c.activate_session('admin', 'admin',
                          res['session_id'], res['challenge'])
+c.close_session(res['session_id'], 'admin')
