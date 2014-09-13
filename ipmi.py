@@ -1,6 +1,7 @@
 import struct
 import socket
 import os
+import time
 
 from collections import namedtuple
 
@@ -126,5 +127,5 @@ for x in range(2000):
                              res['session_id'], res['challenge'])
 print c.activate_session('admin', 'admin',
                          res['session_id'], res['challenge'])
-sleep(1)
+time.sleep(1)
 c.close_session(res['session_id'], 'admin')
