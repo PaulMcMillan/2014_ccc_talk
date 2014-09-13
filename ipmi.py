@@ -83,7 +83,7 @@ class Connection(object):
         res = {
             'completion_code': response[0],
             'session_id': response[1:5],
-            'challenge_string': response[5:21],
+            'challenge': response[5:21],
             }
         return res
 
@@ -111,4 +111,4 @@ print c.get_session_challenge('admin')
 res =  c.get_challenge_response()
 print res
 print c.activate_session('admin', 'admin',
-                         res['session_id'], res['auth_code'])
+                         res['session_id'], res['challenge'])
