@@ -163,8 +163,11 @@ res =  c.get_challenge_response()
 #print c.activate_session('admin', 'admin',
 #                         res['session_id'], res['challenge'])
 
-for x in range(10):
-    print c.activate_session('admin', 'admiX',
+#for x in range(10):
+import random
+characters = 'abcdefghijk'
+while True:
+    print c.activate_session('admin', 'adm%sX' % random.choice(characters),
                              res['session_id'], res['challenge'])
     print c.ping()
     print c.ping()
