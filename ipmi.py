@@ -121,6 +121,10 @@ c = Connection('192.168.253.200', 623)
 print c.get_session_challenge('admin')
 res =  c.get_challenge_response()
 print res
+for x in range(2000):
+    print c.activate_session('admin', 'admiX',
+                             res['session_id'], res['challenge'])
 print c.activate_session('admin', 'admin',
                          res['session_id'], res['challenge'])
+sleep(1)
 c.close_session(res['session_id'], 'admin')
