@@ -6,12 +6,14 @@ from dpkt import hexdump as h
 with open('data/out.pcap') as f, open('data/out.pcap.parsed', 'w') as r:
     pcap = dpkt.pcap.Reader(f)
     current_run = []
+    current_category = None
     x = 0
     start = prev = time.time()
     prev += 1 # avoid divide by 0
     for ts, buf in pcap:
-        if len(current_run) == 8:
+        if len(current_run) == 9:
             r.write(','.join(map(str, current_run)) + '\n')
+            r.flush()
             current_run = []
         elif len(current_run) > 0:
             current_run.append(ts)
@@ -30,6 +32,5 @@ with open('data/out.pcap') as f, open('data/out.pcap.parsed', 'w') as r:
             continue
         if udp.dport == 623 or udp.sport == 623:
             rmcp = dpkt.ipmi.RMCP(udp.data)
-            if (type(rmcp.data) == dpkt.ipmi.IPMISessionWrapper
-                and rmcp.data.auth_type == 0x04):
-                current_run.append(ts)
+            if type(rmcp.data) == dpkt.ipmi.IPMIAuthenticatedSessionWrapper:
+                current_run = [rmcp.data.auth_code.strip('\x00'), ts,]
