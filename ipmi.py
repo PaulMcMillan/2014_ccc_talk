@@ -94,7 +94,7 @@ class Connection(object):
         data = (
             '\x04'  # straight password authentication
             + chr(max_priv_level)
-            + challenge_string
+            + auth_code
             + os.urandom(4)
         )
         packet = self.make_ipmi_msg(
