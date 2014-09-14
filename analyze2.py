@@ -11,13 +11,6 @@ with open('data/out.pcap') as f, open('data/out.pcap.parsed', 'w') as r:
     start = prev = time.time()
     prev += 1 # avoid divide by 0
     for ts, buf in pcap:
-        if len(current_run) == 9:
-            r.write(','.join(map(str, current_run)) + '\n')
-            r.flush()
-            current_run = []
-        elif len(current_run) > 0:
-            current_run.append(ts)
-            continue
         x += 1
         if x % 3000 == 0:
             now = time.time()
@@ -30,7 +23,15 @@ with open('data/out.pcap') as f, open('data/out.pcap.parsed', 'w') as r:
             udp = eth.data.data
         else:
             continue
+
         if udp.dport == 623 or udp.sport == 623:
+            if len(current_run) == 9:
+                r.write(','.join(map(str, current_run)) + '\n')
+                r.flush()
+                current_run = []
+            elif len(current_run) > 0:
+                current_run.append(ts)
+                continue
             rmcp = dpkt.ipmi.RMCP(udp.data)
             if type(rmcp.data) == dpkt.ipmi.IPMIAuthenticatedSessionWrapper:
                 current_run = [rmcp.data.auth_code.strip('\x00'), ts,]
