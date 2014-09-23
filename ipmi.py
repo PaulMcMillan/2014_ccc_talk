@@ -123,8 +123,8 @@ class Connection(object):
         packet = self.wrap_headers(packet,
                                    auth_type='\x04',  # password auth
                                    session_id=session_id,
-                                   auth_code=password,
-                                   rmcp_seq='\x00')
+                                   auth_code=password)
+#                                   rmcp_seq='\x00')
         return self.send(packet)
 
     def close_session(self, session_id, password):
@@ -155,9 +155,9 @@ class Connection(object):
 
 
 
-c = Connection('192.168.253.200', 623)
+c = Connection('192.168.253.14', 623)
 
-print c.get_session_challenge('admin')
+print c.get_session_challenge('maestro')
 res =  c.get_challenge_response()
 
 #print c.activate_session('admin', 'admin',
@@ -165,13 +165,14 @@ res =  c.get_challenge_response()
 
 #for x in range(10):
 import random
-characters = 'abcdefghijk'
-while True:
-    print c.activate_session('admin', 'adm%sX' % random.choice(characters),
+characters = '0123456789'
+#while True:
+for x in range(100):
+    print c.activate_session('maestro', '01234%s0000' % random.choice(characters),
                              res['session_id'], res['challenge'])
-    print c.ping()
-    print c.ping()
-    print c.ping()
+#    print c.ping()
+#    print c.ping()
+#    print c.ping()
     time.sleep(0.02)
 time.sleep(1)
 

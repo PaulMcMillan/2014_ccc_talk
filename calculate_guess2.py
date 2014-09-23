@@ -9,7 +9,7 @@ from utils import read_data
 
 def choose_points(response_list):
     res = [d[5]-d[4] for d in response_list]
-    return filter(lambda x: x > 550000 and x < 1.4e6, res)
+    return filter(lambda x: x > 5.5e5 and x < 1.4e6, res)
 
 
 def analyze_data(data, p_threshold=0.05):
@@ -28,5 +28,9 @@ def analyze_data(data, p_threshold=0.05):
 
 
 data = read_data()
+
+for k, v in data.items():
+    print k, len(choose_points(v))
+
 
 pprint(analyze_data(data, p_threshold=0.01))
